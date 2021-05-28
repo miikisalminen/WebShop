@@ -1,5 +1,10 @@
-<h2>Log In</h2>
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Log In</button>
-</form>
+{% extends "shop/base.html" %} {% block content %}
+<div class="centerbox">
+  <h2>Log In</h2>
+  <form method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit">Log In</button>
+  </form>
+  <a href="/">Back</a>
+</div>
+{% endblock %}

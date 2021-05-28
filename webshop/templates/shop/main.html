@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+{% extends "shop/base.html" %} {% block content %}
+<!-- Content -->
+<div class="centerbox">
+  <h1>TheShop</h1>
+  <h3>Shopping made easy!</h3>
+  <p>
+    By proceeding to the webshop you accept the
+    <a href="">Terms and Conditions</a>
+  </p>
 
-    <title>Welcome to TheShop</title>
-  </head>
-
-  <body>
-    <!-- Content -->
-    <h1>Landing page</h1>
-    <a href="/account/login">Login</a>
-    <a href="/shop">Browse as Guest</a>
-  </body>
-</html>
+  <a href="/account/login" class="link-button">Login</a>
+  <a href="/signup" class="link-button">Sign up</a>
+  <a href="/shop" class="link-button">Browse as Guest</a>
+</div>
+{% endblock %}
