@@ -11,5 +11,19 @@
   <a href="/account/login" class="link-button">Login</a>
   <a href="/signup" class="link-button">Sign up</a>
   <a href="/shop" class="link-button">Browse as Guest</a>
+  <a href="/populate" class="link-button">Populate database</a>
+  
+  <!-- Population success message -->
+  {% if messages %}
+    {% for message in messages %}
+    <p style="color:green"> <b>{{ message }}</b></p>
+    {% endfor %}
+{% endif %}
+
+<p>
+Currently listing {{ listing_count }} items for sale!
+</p>
+
+
 </div>
 {% endblock %}
