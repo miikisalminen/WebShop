@@ -7,8 +7,13 @@ import logoutIcon from "../../logout.png";
 
 const Main = styled.div`
   color: "white";
-  border: 3px solid #f79862;
+  border: 3px solid black;
   width: 50% auto;
+  transition: 0.5s;
+
+  &:hover {
+    box-shadow: 5px 5px;
+  }
 `;
 
 const Title = styled.h2`

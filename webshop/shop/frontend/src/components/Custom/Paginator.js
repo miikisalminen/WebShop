@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import axios from "axios";
 import styled from "styled-components";
 
-import searchIcon from "../../search.png";
-
 const Main = styled.div`
   color: "white";
   background-color: white;

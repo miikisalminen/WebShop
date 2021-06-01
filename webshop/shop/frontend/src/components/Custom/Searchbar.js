@@ -9,6 +9,7 @@ const Main = styled.div`
   background-color: white;
 
   width: 100%;
+  margin-bottom: 10px;
 `;
 
 const Inputfield = styled.input`
@@ -19,7 +20,7 @@ const Inputfield = styled.input`
   box-sizing: border-box;
 
   font-size: 16px;
-  border: 3px solid #f79862;
+  border: 3px solid black;
 
   background-image: url(${searchIcon});
   background-repeat: no-repeat;

@@ -8,7 +8,6 @@ from rest_framework.response import Response
 
 from .models import *
 from .serializer import *
-from .pagination import *
 from .forms import AccountRegisterForm
 
 from django.contrib.auth import login, authenticate
