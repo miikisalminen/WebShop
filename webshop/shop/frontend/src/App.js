@@ -1,20 +1,38 @@
-import Test from "./components/Custom/Test";
-import ColumnContainer from "./components/Containers/ColumnContainer"
+import Navbar from "./components/Custom/Navbar";
+import Searchbar from "./components/Custom/Searchbar";
+import ListingCard from "./components/Custom/ListingCard";
+import Paginator from "./components/Custom/Paginator";
+
+import ColumnContainer from "./components/Containers/ColumnContainer";
+import CartContainer from "./components/Containers/CartContainer";
 
 function App() {
   return (
-    <div className="App"style={{display: "flex"}}>
-      <ColumnContainer style={{width: "70em"}}>
-      <header className="App-header">
-        <h1>Hello this works yes</h1>
-        <a href="/account/logout">Log out</a>
-      </header>
-      </ColumnContainer>
+    <div>
+      <Navbar className="navbar" />
+      <div className="App" style={{ display: "flex" }}>
+        <ColumnContainer style={{ width: "70em" }}>
+          <Searchbar />
+          <ListingCard title="test" price="30" desc="Twenty five chars yeah" />
+          <ListingCard title="test" price="30" desc="Twenty five chars yeah" />
+          <ListingCard title="test" price="30" desc="Twenty five chars yeah" />
+          <ListingCard title="test" price="30" desc="Twenty five chars yeah" />
+          <ListingCard title="test" price="30" desc="Twenty five chars yeah" />
+          <Paginator />
+        </ColumnContainer>
 
-      <ColumnContainer style={{width: "30em"}}>
-      <Test />
-      <p>ja tääl olis sitte niiku</p>
-      </ColumnContainer>
+        <CartContainer style={{ width: "30em" }}>
+          <h1 style={{ textAlign: "center" }}>
+            Cart:
+            <br></br>
+            Stinky sock
+            <br></br>
+            Old matress
+            <br></br>
+            Damp water
+          </h1>
+        </CartContainer>
+      </div>
     </div>
   );
 }

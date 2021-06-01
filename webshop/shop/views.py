@@ -3,9 +3,12 @@ import json
 import random
 
 from rest_framework.views import APIView
-from .models import *
+from django.core.paginator import Paginator
 from rest_framework.response import Response
+
+from .models import *
 from .serializer import *
+from .pagination import *
 from .forms import AccountRegisterForm
 
 from django.contrib.auth import login, authenticate
@@ -75,14 +78,14 @@ def populate(request):
     User.objects.create(username="testuser3", password="pass3", email="testuser3@shop.aa")
 
     # Creating 3 selling users with listings
-    user1 = User.objects.create(username="testuser4", password="pass4", email="testuser4@shop.aa")
-    user2 = User.objects.create(username="testuser5", password="pass5", email="testuser5@shop.aa")
-    user3 = User.objects.create(username="testuser6", password="pass6", email="testuser6@shop.aa")
+    User.objects.create(username="testuser4", password="pass4", email="testuser4@shop.aa")
+    User.objects.create(username="testuser5", password="pass5", email="testuser5@shop.aa")
+    User.objects.create(username="testuser6", password="pass6", email="testuser6@shop.aa")
 
     for i in range(30):
-        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Selling a test item.", price=12, creator=User.objects.get(username="testuser4"))
-        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Selling a test item.", price=12, creator=User.objects.get(username="testuser5"))
-        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Selling a test item.", price=12, creator=User.objects.get(username="testuser6"))
+        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Selling a test item.", price=random.randint(1,120), creator=User.objects.get(username="testuser4"))
+        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Selling a test item.", price=random.randint(1,120), creator=User.objects.get(username="testuser5"))
+        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Selling a test item.", price=random.randint(1,120), creator=User.objects.get(username="testuser6"))
 
     # Return to landingpage
     messages.success(request, 'Population successful!')
@@ -100,3 +103,15 @@ class UserView(APIView):
             return Response(request.user.username)
         else:
             return Response("Guest")
+
+# Listing Endpoint with pagination
+class ListingView(APIView):
+    serializer_class = ListingSerializer
+
+    def get(self, request):
+        queryset = Listing.objects.all().values()
+        paginator = Paginator(queryset, 24) # Load 24 items
+
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return Response(list(page_obj))

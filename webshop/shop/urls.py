@@ -15,4 +15,5 @@ urlpatterns = [
     path('populate/', views.populate),
     # API endpoints
     path("api/auth", views.UserView.as_view()),
+    path("api/query", views.ListingView.as_view()),
 ]

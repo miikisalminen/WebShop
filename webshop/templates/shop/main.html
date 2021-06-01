@@ -5,25 +5,21 @@
   <h3>Shopping made easy!</h3>
   <p>
     By proceeding to the webshop you accept the
+    <br />
     <a href="">Terms and Conditions</a>
   </p>
 
-  <a href="/account/login" class="link-button">Login</a>
-  <a href="/signup" class="link-button">Sign up</a>
-  <a href="/shop" class="link-button">Browse as Guest</a>
-  <a href="/populate" class="link-button">Populate database</a>
-  
+  <div class="grid-container">
+    <a href="/account/login" class="link-button">Login</a>
+    <a href="/signup" class="link-button">Sign up</a>
+    <a href="/shop" class="link-button">Browse as Guest</a>
+    <a href="/populate" class="link-button">Populate database</a>
+  </div>
   <!-- Population success message -->
-  {% if messages %}
-    {% for message in messages %}
-    <p style="color:green"> <b>{{ message }}</b></p>
-    {% endfor %}
-{% endif %}
+  {% if messages %} {% for message in messages %}
+  <p style="color: green"><b>{{ message }}</b></p>
+  {% endfor %} {% endif %}
 
-<p>
-Currently listing {{ listing_count }} items for sale!
-</p>
-
-
+  <p>Currently listing {{ listing_count }} items for sale!</p>
 </div>
 {% endblock %}
