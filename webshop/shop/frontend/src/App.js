@@ -10,6 +10,8 @@ import Paginator from "./components/Custom/Paginator";
 import ColumnContainer from "./components/Containers/ColumnContainer";
 import CartContainer from "./components/Containers/CartContainer";
 
+import searchIcon from "./search.png";
+
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -37,6 +39,21 @@ const PaginatorButton = styled.a`
   }
 `;
 
+const Inputfield = styled.input`
+  display: block;
+  width: 100%;
+  padding: 12px 0px 12px 40px;
+  margin: 5px;
+  box-sizing: border-box;
+
+  font-size: 16px;
+  border: 3px solid black;
+
+  background-image: url(${searchIcon});
+  background-repeat: no-repeat;
+  background-position: 10px 8px;
+`;
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -44,9 +61,12 @@ export default class App extends Component {
     this.state = {
       listings: [],
       page: 1,
+      searchTerm: "",
     };
 
     this.loadNext = this.loadNext.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -63,16 +83,42 @@ export default class App extends Component {
   loadNext = () => {
     this.state.page = this.state.page + 1;
     this.setState({ page: this.state.page });
-    axios.get("/api/query?page=" + this.state.page, {}).then(
+    axios
+      .get(
+        "/api/query?page=" +
+          this.state.page +
+          "&searchTerm=" +
+          this.state.searchTerm,
+        {}
+      )
+      .then(
+        (response) => {
+          this.setState({ listings: response.data });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    window.scrollTo(0, 0);
+  };
+
+  handleChange(event) {
+    this.setState({ searchTerm: event.target.value });
+  }
+
+  handleSubmit(event) {
+    this.setState({ page: 1 });
+    axios.get("/api/query?page=1&searchTerm=" + this.state.searchTerm, {}).then(
       (response) => {
+        console.log(response.data);
         this.setState({ listings: response.data });
       },
       (error) => {
         console.log(error);
       }
     );
-    window.scrollTo(0, 0);
-  };
+    event.preventDefault();
+  }
 
   render() {
     const listingList = [];
@@ -82,6 +128,7 @@ export default class App extends Component {
           title={listing.title}
           price={listing.price}
           desc={listing.desc}
+          created_at={listing.created_at}
         />
       );
     });
@@ -90,7 +137,16 @@ export default class App extends Component {
         <Navbar className="navbar" />
         <div className="App" style={{ display: "flex" }}>
           <ColumnContainer style={{ width: "70em" }}>
-            <Searchbar />
+            <form style={{ width: "100%" }} onSubmit={this.handleSubmit}>
+              <Inputfield
+                type="text"
+                name="search"
+                value={this.state.searchTerm}
+                onChange={this.handleChange}
+                placeholder="Search listings"
+                maxLength="20"
+              />
+            </form>
             <Grid>{listingList}</Grid>
             <PaginatorButton onClick={this.loadNext}>Next</PaginatorButton>
           </ColumnContainer>

@@ -28,6 +28,12 @@ const Description = styled.p`
   padding-left: 10px;
 `;
 
+const Timestamp = styled.p`
+  padding-left: 10px;
+  color: gray;
+  font-style: italic;
+`;
+
 const BuyButton = styled.a`
   float: right;
   color: black;
@@ -49,6 +55,7 @@ export default class ListingCard extends Component {
         <Title>{this.props.title}</Title>
         <BuyButton href="">Add to Cart</BuyButton>
         <Description>{this.props.desc}</Description>
+        <Timestamp>{this.props.created_at}</Timestamp>
         <Price>{this.props.price}€</Price>
       </Main>
     );

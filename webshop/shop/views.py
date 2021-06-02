@@ -82,9 +82,9 @@ def populate(request):
     User.objects.create(username="testuser6", password="pass6", email="testuser6@shop.aa")
 
     for i in range(30):
-        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Selling a test item.", price=random.randint(1,120), creator=User.objects.get(username="testuser4"))
-        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Selling a test item.", price=random.randint(1,120), creator=User.objects.get(username="testuser5"))
-        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Selling a test item.", price=random.randint(1,120), creator=User.objects.get(username="testuser6"))
+        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="Found this in the shed so I'm selling it cheap!", price=random.randint(1,120), creator=User.objects.get(username="testuser4"))
+        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="I need some quick cash, pls buy", price=random.randint(1,120), creator=User.objects.get(username="testuser5"))
+        Listing.objects.create(title=random.choice(adj) + " " + random.choice(subst), desc="High quality item in almost pristine condition.", price=random.randint(1,120), creator=User.objects.get(username="testuser6"))
 
     # Return to landingpage
     messages.success(request, 'Population successful!')
@@ -108,8 +108,13 @@ class ListingView(APIView):
     serializer_class = ListingSerializer
 
     def get(self, request):
-        queryset = Listing.objects.all().values()
-        paginator = Paginator(queryset, 24) # Load 24 items
+        if(request.GET.get('searchTerm') != None):
+            queryset = Listing.objects.filter(title__icontains=request.GET.get('searchTerm')).values()
+        else:
+            queryset = Listing.objects.all().values()
+        for i in queryset: # Changing timestamp to be more readable
+            i["created_at"] = i["created_at"].strftime("%d-%m-%Y %H:%M")
+        paginator = Paginator(queryset, 8) # Load 8 items
 
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)

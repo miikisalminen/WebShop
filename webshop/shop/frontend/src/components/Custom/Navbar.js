@@ -50,7 +50,10 @@ export default class Navbar extends Component {
         <Link href="">My items</Link>
         <Link href="">Account</Link>
 
-        <Link style={{ float: "right" }} href="">
+        <Link
+          style={{ float: "right" }}
+          href="http://localhost:8000/account/logout"
+        >
           <img src={logoutIcon} alt="Logout" style={{ width: "25px" }} />
         </Link>
         <CartLink style={{ float: "right" }} href="">
