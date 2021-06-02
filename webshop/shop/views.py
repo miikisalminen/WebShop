@@ -103,18 +103,23 @@ class UserView(APIView):
         else:
             return Response("Guest")
 
-# Listing Endpoint with pagination
+# Listing Endpoint with pagination and searching
+# Listings created by the requester are ignored
 class ListingView(APIView):
     serializer_class = ListingSerializer
 
     def get(self, request):
         if(request.GET.get('searchTerm') != None):
-            queryset = Listing.objects.filter(title__icontains=request.GET.get('searchTerm')).values()
+            queryset = Listing.objects.filter(title__icontains=request.GET.get('searchTerm')).exclude(creator=request.user.id).values()
         else:
-            queryset = Listing.objects.all().values()
-        for i in queryset: # Changing timestamp to be more readable
+            queryset = Listing.objects.all().exclude(creator=request.user.id).values()
+       
+
+       # Changing timestamp to be more readable
+        for i in queryset: 
             i["created_at"] = i["created_at"].strftime("%d-%m-%Y %H:%M")
-        paginator = Paginator(queryset, 8) # Load 8 items
+        # Load 8 items per page
+        paginator = Paginator(queryset, 8) 
 
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)

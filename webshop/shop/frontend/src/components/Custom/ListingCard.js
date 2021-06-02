@@ -50,14 +50,25 @@ const BuyButton = styled.a`
 
 export default class ListingCard extends Component {
   render() {
-    return (
-      <Main>
-        <Title>{this.props.title}</Title>
-        <BuyButton href="">Add to Cart</BuyButton>
-        <Description>{this.props.desc}</Description>
-        <Timestamp>{this.props.created_at}</Timestamp>
-        <Price>{this.props.price}€</Price>
-      </Main>
-    );
+    if (this.props.username != "Guest") {
+      return (
+        <Main>
+          <Title>{this.props.title}</Title>
+          <BuyButton href="">Add to Cart</BuyButton>
+          <Description>{this.props.desc}</Description>
+          <Timestamp>{this.props.created_at}</Timestamp>
+          <Price>{this.props.price}€</Price>
+        </Main>
+      );
+    } else {
+      return (
+        <Main>
+          <Title>{this.props.title}</Title>
+          <Description>{this.props.desc}</Description>
+          <Timestamp>{this.props.created_at}</Timestamp>
+          <Price>{this.props.price}€</Price>
+        </Main>
+      );
+    }
   }
 }

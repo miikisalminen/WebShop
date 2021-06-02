@@ -19,9 +19,12 @@ const Grid = styled.div`
   grid-gap: 15px;
   margin-left: 10px;
   @media (max-width: 769px) {
-    margin: 5px;
+    box-sizing: border-box;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
+    .cartContainer {
+      display: none;
+    }
   }
 `;
 
@@ -62,6 +65,7 @@ export default class App extends Component {
       listings: [],
       page: 1,
       searchTerm: "",
+      username: "",
     };
 
     this.loadNext = this.loadNext.bind(this);
@@ -73,6 +77,15 @@ export default class App extends Component {
     axios.get("/api/query?page=" + this.state.page, {}).then(
       (response) => {
         this.setState({ listings: response.data });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+    axios.get("/api/auth", {}).then(
+      (response) => {
+        this.setState({ username: response.data });
       },
       (error) => {
         console.log(error);
@@ -129,12 +142,13 @@ export default class App extends Component {
           price={listing.price}
           desc={listing.desc}
           created_at={listing.created_at}
+          username={this.state.username}
         />
       );
     });
     return (
       <div>
-        <Navbar className="navbar" />
+        <Navbar className="navbar" username={this.state.username} />
         <div className="App" style={{ display: "flex" }}>
           <ColumnContainer style={{ width: "70em" }}>
             <form style={{ width: "100%" }} onSubmit={this.handleSubmit}>
@@ -148,10 +162,10 @@ export default class App extends Component {
               />
             </form>
             <Grid>{listingList}</Grid>
-            <PaginatorButton onClick={this.loadNext}>Next</PaginatorButton>
+            <PaginatorButton onClick={this.loadNext}>Load more</PaginatorButton>
           </ColumnContainer>
 
-          <CartContainer style={{ width: "30em" }}>
+          <CartContainer className="cartContainer" style={{ width: "30em" }}>
             <h1 style={{ textAlign: "center" }}>
               Cart:
               <br></br>

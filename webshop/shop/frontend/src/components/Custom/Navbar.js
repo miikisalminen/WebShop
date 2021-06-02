@@ -44,22 +44,36 @@ const CartLink = styled.a`
 
 export default class Navbar extends Component {
   render() {
-    return (
-      <Main>
-        <Link href="">Browse</Link>
-        <Link href="">My items</Link>
-        <Link href="">Account</Link>
+    if (this.props.username != "Guest") {
+      // If user is logged in
+      return (
+        <Main>
+          <Link href="http://localhost:8000/shop">Browse</Link>
+          <Link href="">My items</Link>
+          <Link href="http://localhost:8000/account/password_change">
+            Account
+          </Link>
 
-        <Link
-          style={{ float: "right" }}
-          href="http://localhost:8000/account/logout"
-        >
-          <img src={logoutIcon} alt="Logout" style={{ width: "25px" }} />
-        </Link>
-        <CartLink style={{ float: "right" }} href="">
-          <img src={cartIcon} alt="Cart" style={{ width: "25px" }} />
-        </CartLink>
-      </Main>
-    );
+          <Link
+            style={{ float: "right" }}
+            href="http://localhost:8000/account/logout"
+          >
+            <img src={logoutIcon} alt="Logout" style={{ width: "25px" }} />
+          </Link>
+          <CartLink style={{ float: "right" }} href="">
+            <img src={cartIcon} alt="Cart" style={{ width: "25px" }} />
+          </CartLink>
+        </Main>
+      );
+    } else {
+      // If user is a Guest
+      return (
+        <Main>
+          <Link href="http://localhost:8000/shop">Browse</Link>
+          <Link href="http://localhost:8000/account/login">Login</Link>
+          <Link href="http://localhost:8000/signup">Signup</Link>
+        </Main>
+      );
+    }
   }
 }
