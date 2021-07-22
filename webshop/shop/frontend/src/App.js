@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from "axios";
 
 import Navbar from "./components/Custom/Navbar";
@@ -11,6 +12,7 @@ import ColumnContainer from "./components/Containers/ColumnContainer";
 import CartContainer from "./components/Containers/CartContainer";
 
 import searchIcon from "./search.png";
+import CreateListing from "./components/Custom/CreateListing";
 
 const Grid = styled.div`
   display: grid;
@@ -18,7 +20,7 @@ const Grid = styled.div`
   grid-template-rows: 1fr 1fr;
   grid-gap: 15px;
   margin-left: 10px;
-  @media (max-width: 769px) {
+  @media (max-width: 900px) {
     box-sizing: border-box;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
@@ -63,6 +65,7 @@ export default class App extends Component {
 
     this.state = {
       listings: [],
+      myListings: [],
       page: 1,
       searchTerm: "",
       username: "",
@@ -74,6 +77,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
+    // Fetch initial listings
     axios.get("/api/query?page=" + this.state.page, {}).then(
       (response) => {
         this.setState({ listings: response.data });
@@ -83,6 +87,9 @@ export default class App extends Component {
       }
     );
 
+    this.setState({ page: 2 });
+
+    // Fetch users username
     axios.get("/api/auth", {}).then(
       (response) => {
         this.setState({ username: response.data });
@@ -91,11 +98,21 @@ export default class App extends Component {
         console.log(error);
       }
     );
+    // Fetch user made listings
+    axios.get("/api/auth/myitems", {}).then(
+      (response) => {
+        console.log(response.data);
+        this.setState({ myListings: response.data });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
-  loadNext = () => {
-    this.state.page = this.state.page + 1;
-    this.setState({ page: this.state.page });
+  loadNext(event) {
+    this.setState({ page: this.state.page + 1 });
+    //this.setState({ page: this.state.page });
     axios
       .get(
         "/api/query?page=" +
@@ -113,7 +130,7 @@ export default class App extends Component {
         }
       );
     window.scrollTo(0, 0);
-  };
+  }
 
   handleChange(event) {
     this.setState({ searchTerm: event.target.value });
@@ -146,23 +163,53 @@ export default class App extends Component {
         />
       );
     });
+
+    const mylistingsList = [];
+    this.state.myListings.forEach((listing) => {
+      mylistingsList.push(
+        <ListingCard
+          title={listing.title}
+          price={listing.price}
+          desc={listing.desc}
+          created_at={listing.created_at}
+          username={this.state.username}
+        />
+      );
+    });
     return (
       <div>
         <Navbar className="navbar" username={this.state.username} />
+
         <div className="App" style={{ display: "flex" }}>
           <ColumnContainer style={{ width: "70em" }}>
-            <form style={{ width: "100%" }} onSubmit={this.handleSubmit}>
-              <Inputfield
-                type="text"
-                name="search"
-                value={this.state.searchTerm}
-                onChange={this.handleChange}
-                placeholder="Search listings"
-                maxLength="20"
-              />
-            </form>
-            <Grid>{listingList}</Grid>
-            <PaginatorButton onClick={this.loadNext}>Load more</PaginatorButton>
+            <Router basename="/shop">
+              <Switch>
+                <Route exact path="/">
+                  <form style={{ width: "100%" }} onSubmit={this.handleSubmit}>
+                    <Inputfield
+                      type="text"
+                      name="search"
+                      value={this.state.searchTerm}
+                      onChange={this.handleChange}
+                      placeholder="Search listings"
+                      maxLength="20"
+                    />
+                  </form>
+                  <Grid>{listingList}</Grid>
+                  <PaginatorButton onClick={this.loadNext}>
+                    Load more
+                  </PaginatorButton>
+                </Route>
+
+                <Route path="/myitems">
+                  <h2 style={{ textAlign: "center" }}>Active</h2>
+                  <CreateListing />
+                  <Grid>{mylistingsList}</Grid>
+                  <h2 style={{ textAlign: "center" }}>Sold</h2>
+                  <h2 style={{ textAlign: "center" }}>Purchased</h2>
+                </Route>
+              </Switch>
+            </Router>
           </ColumnContainer>
 
           <CartContainer className="cartContainer" style={{ width: "30em" }}>

@@ -11,4 +11,4 @@ class ListingSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Listing
-        fields = '__all__'
+        fields = ["title", "desc", "price"]

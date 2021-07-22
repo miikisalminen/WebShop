@@ -44,12 +44,12 @@ const CartLink = styled.a`
 
 export default class Navbar extends Component {
   render() {
-    if (this.props.username != "Guest") {
+    if (this.props.username !== "Guest") {
       // If user is logged in
       return (
         <Main>
           <Link href="http://localhost:8000/shop">Browse</Link>
-          <Link href="">My items</Link>
+          <Link href="http://localhost:8000/shop/myitems">My items</Link>
           <Link href="http://localhost:8000/account/password_change">
             Account
           </Link>

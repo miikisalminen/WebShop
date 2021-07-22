@@ -103,11 +103,23 @@ class UserView(APIView):
         else:
             return Response("Guest")
 
+# Fetch user made listings
+class UserListingView(APIView):
+    serializer_class = ListingSerializer
+
+    def get(self, request):
+        queryset = Listing.objects.filter(creator=request.user.id).values()
+        for i in queryset:
+            i["created_at"] = i["created_at"].strftime("%d-%m-%Y %H:%M")
+        return Response(queryset)
+
 # Listing Endpoint with pagination and searching
 # Listings created by the requester are ignored
+# A POST request to this endpoint will create a listing
 class ListingView(APIView):
     serializer_class = ListingSerializer
 
+    # Pagination & Searching
     def get(self, request):
         if(request.GET.get('searchTerm') != None):
             queryset = Listing.objects.filter(title__icontains=request.GET.get('searchTerm')).exclude(creator=request.user.id).values()
@@ -124,3 +136,20 @@ class ListingView(APIView):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         return Response(list(page_obj))
+
+    def post(self, request):
+
+        serializer = ListingSerializer(data=request.data)
+        print(request.data)
+        if serializer.is_valid(raise_exception=True):
+
+            # Creating the listing
+            new_listing = Listing.objects.create(
+            title = serializer.data["title"],
+            desc = serializer.data["desc"],
+            price = serializer.data["price"],
+            creator = request.user,      
+            )
+            new_listing.save()
+
+            return Response(serializer.data)

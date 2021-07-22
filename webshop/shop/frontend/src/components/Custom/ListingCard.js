@@ -17,11 +17,26 @@ const Main = styled.div`
 `;
 
 const Title = styled.h2`
+  font-family: "Libre Franklin", sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: normal;
   padding-left: 10px;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 `;
 
 const Price = styled.h3`
   padding-left: 10px;
+  display: block;
+  font-size: 1.17em;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
 `;
 
 const Description = styled.p`
@@ -53,6 +68,11 @@ export default class ListingCard extends Component {
     if (this.props.username != "Guest") {
       return (
         <Main>
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300&display=swap"
+            rel="stylesheet"
+          />
           <Title>{this.props.title}</Title>
           <BuyButton href="">Add to Cart</BuyButton>
           <Description>{this.props.desc}</Description>
