@@ -18,7 +18,10 @@ urlpatterns = [
     path("api/auth/myitems", views.UserListingView.as_view()),
     
 
-    # General listing API endpoint
+    # General listing API endpoint(s)
     path("api/query", views.ListingView.as_view()),
+    path("api/delete", views.DeleteListingView.as_view()),
+    path("api/edit", views.EditListingView.as_view()),
+    path("api/cart", views.AddToCartView.as_view()),
     
 ]

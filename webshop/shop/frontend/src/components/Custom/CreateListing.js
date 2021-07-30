@@ -4,7 +4,7 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true;
 
 const Button = styled.a`
   color: black;
@@ -61,28 +61,23 @@ export default class CreateListing extends Component {
   }
 
   handleSubmit() {
-
     let data = {
       title: this.state.title,
       desc: this.state.desc,
-      price: this.state.price
+      price: this.state.price,
     };
 
     axios
-      .post("api/query", data ,{
-      xsrfHeaderName: 'X-CSRFToken',
-      withCredentials: true
-
-      }
-        
-      )
-      .then((res) => {
-        console.log(res.data)
+      .post("api/query", data, {
+        xsrfHeaderName: "X-CSRFToken",
+        withCredentials: true,
       })
+      .then((res) => {})
       .catch((err) => {
-        console.log(err)
+        console.log(err);
       });
     this.handleClose();
+    window.location.reload();
   }
 
   render() {

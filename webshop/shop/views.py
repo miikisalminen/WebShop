@@ -45,6 +45,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
+            Cart.objects.create(user=user)
             return redirect('shop')
     else:
         form = AccountRegisterForm()
@@ -140,7 +141,6 @@ class ListingView(APIView):
     def post(self, request):
 
         serializer = ListingSerializer(data=request.data)
-        print(request.data)
         if serializer.is_valid(raise_exception=True):
 
             # Creating the listing
@@ -153,3 +153,60 @@ class ListingView(APIView):
             new_listing.save()
 
             return Response(serializer.data)
+
+# API Endpoint for deleting listings by POSTing title and creation date
+# Only users who are the creator of a listing can delete said listing.
+class DeleteListingView(APIView):
+    serializer_class = DeleteListingSerializer
+
+    def post(self, request):
+
+        serializer = DeleteListingSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+
+            # Checking if the requester is the creator then deleting the listing
+            listing_to_be_deleted = Listing.objects.get(title = serializer.data["title"], creator = request.user)
+            if request.user == listing_to_be_deleted.creator:
+                listing_to_be_deleted.delete()
+            else:
+                print("User is not the creator")
+            return Response(serializer.data)
+        print(serializer.errors)
+
+# API Endpoint to edit a user listing
+# Only users who are the creator of a listing can edit said listing.
+class EditListingView(APIView):
+    serializer_class = DeleteListingSerializer
+
+    def post(self, request):
+        serializer = ListingSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+        
+            listing_to_be_edited = Listing.objects.get(title = serializer.data["title"], desc = serializer.data["desc"], price = serializer.data["price"], creator = request.user)
+            # Editing the listing
+            listing_to_be_edited.title = request.data["new_title"]
+            listing_to_be_edited.desc = request.data["new_desc"]
+            listing_to_be_edited.price = request.data["new_price"]
+
+            listing_to_be_edited.save()
+
+            return Response(serializer.data)
+
+class AddToCartView(APIView):
+    serializer_class = ListingSerializer
+
+    def post(self, request):
+        serializer = ListingSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+
+            listing_to_be_carted = Listing.objects.get(title = serializer.data["title"], desc = serializer.data["desc"], price = serializer.data["price"])
+            users_cart = Cart.objects.get(user=request.user)
+            
+            users_cart.listings.add(listing_to_be_carted)
+            users_cart.save()
+
+        return Response(serializer.data)
+    
+    def get(self, request):
+        users_cart = Cart.objects.get(user=request.user)
+        return Response(users_cart.listings.all().values())

@@ -12,3 +12,9 @@ class ListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
         fields = ["title", "desc", "price"]
+
+class DeleteListingSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Listing
+        fields = ["title"]

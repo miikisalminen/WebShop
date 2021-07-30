@@ -6,6 +6,7 @@ import axios from "axios";
 import Navbar from "./components/Custom/Navbar";
 import Searchbar from "./components/Custom/Searchbar";
 import ListingCard from "./components/Custom/ListingCard";
+import OwnedListingCard from "./components/Custom/OwnedListingCard";
 import Paginator from "./components/Custom/Paginator";
 
 import ColumnContainer from "./components/Containers/ColumnContainer";
@@ -66,6 +67,7 @@ export default class App extends Component {
     this.state = {
       listings: [],
       myListings: [],
+      myCart: [],
       page: 1,
       searchTerm: "",
       username: "",
@@ -101,8 +103,17 @@ export default class App extends Component {
     // Fetch user made listings
     axios.get("/api/auth/myitems", {}).then(
       (response) => {
-        console.log(response.data);
         this.setState({ myListings: response.data });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    // Fetch user cart
+    axios.get("/api/cart", {}).then(
+      (response) => {
+        console.log(response.data);
+        this.setState({ myCart: response.data });
       },
       (error) => {
         console.log(error);
@@ -136,6 +147,10 @@ export default class App extends Component {
     this.setState({ searchTerm: event.target.value });
   }
 
+  removeFromCart = () => {
+    console.log("removed");
+  };
+
   handleSubmit(event) {
     this.setState({ page: 1 });
     axios.get("/api/query?page=1&searchTerm=" + this.state.searchTerm, {}).then(
@@ -167,13 +182,26 @@ export default class App extends Component {
     const mylistingsList = [];
     this.state.myListings.forEach((listing) => {
       mylistingsList.push(
-        <ListingCard
+        <OwnedListingCard
           title={listing.title}
           price={listing.price}
           desc={listing.desc}
           created_at={listing.created_at}
           username={this.state.username}
         />
+      );
+    });
+
+    const cartList = [];
+    this.state.myCart.forEach((listing) => {
+      cartList.push(
+        <div style={{ padding: "5px" }}>
+          <h3 style={{ float: "left", padding: "10px" }}>{listing.title}</h3>
+          <p style={{ float: "right", padding: "10px" }}>{listing.price}€</p>
+          <button style={{ width: "100%" }} onClick={this.removeFromCart}>
+            Remove
+          </button>
+        </div>
       );
     });
     return (
@@ -205,23 +233,19 @@ export default class App extends Component {
                   <h2 style={{ textAlign: "center" }}>Active</h2>
                   <CreateListing />
                   <Grid>{mylistingsList}</Grid>
-                  <h2 style={{ textAlign: "center" }}>Sold</h2>
-                  <h2 style={{ textAlign: "center" }}>Purchased</h2>
                 </Route>
               </Switch>
             </Router>
           </ColumnContainer>
 
-          <CartContainer className="cartContainer" style={{ width: "30em" }}>
-            <h1 style={{ textAlign: "center" }}>
-              Cart:
-              <br></br>
-              Stinky sock
-              <br></br>
-              Old matress
-              <br></br>
-              Damp water
-            </h1>
+          <CartContainer
+            className="cartContainer"
+            style={{ width: "30em", padding: "5px" }}
+          >
+            <h1 style={{ textAlign: "center" }}>Cart</h1>
+            {cartList}
+            <br />
+            <button style={{ width: "100%" }}>Buy</button>
           </CartContainer>
         </div>
       </div>

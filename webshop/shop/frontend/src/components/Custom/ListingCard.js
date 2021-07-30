@@ -64,6 +64,28 @@ const BuyButton = styled.a`
 `;
 
 export default class ListingCard extends Component {
+  handleAddToCart = () => {
+    console.log("Added " + this.props.title + " to cart!");
+
+    let data = {
+      title: this.props.title,
+      desc: this.props.desc,
+      price: this.props.price,
+    };
+
+    axios
+      .post("api/cart", data, {
+        xsrfHeaderName: "X-CSRFToken",
+        withCredentials: true,
+      })
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+
+    window.location.reload();
+  };
+
   render() {
     if (this.props.username != "Guest") {
       return (
@@ -74,7 +96,7 @@ export default class ListingCard extends Component {
             rel="stylesheet"
           />
           <Title>{this.props.title}</Title>
-          <BuyButton href="">Add to Cart</BuyButton>
+          <BuyButton onClick={this.handleAddToCart}>Add to Cart</BuyButton>
           <Description>{this.props.desc}</Description>
           <Timestamp>{this.props.created_at}</Timestamp>
           <Price>{this.props.price}€</Price>
