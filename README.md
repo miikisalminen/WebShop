@@ -9,14 +9,25 @@ Fullstack webshop-app for a school project over the summer of 2021.
 
 ## Functionalities
 
-- Account creation
-- Login/Logout
+- Site architecture
 - Automatic DB population
-- Listing browsing (pagination & searching)
-- Password changing
-
--More to come...
+- Browse
+- Search
+- Routing
+- Create account
+- Login
+- Edit Account
+- Add item
+- Display inventory
+- Edit item
+- Add to cart
+- Responsive
+- Security
+- Usability
+- Backend
+- Frontend
+### Total points 32
 
 ## Demo
 
-Not yet...
+Once I figure it out (not implemented)
